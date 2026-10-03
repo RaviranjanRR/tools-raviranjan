@@ -1,0 +1,2670 @@
+<!DOCTYPE html>
+<!-- saved from url=(0030)http://127.0.0.1:5500/pro.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PixelTools - Image &amp; PDF Tools</title>
+
+<!-- Libraries -->
+<script src="./Tools - Image &amp; PDF Tools_files/jspdf.umd.min.js.download"></script>
+<script src="./Tools - Image &amp; PDF Tools_files/pdf-lib.min.js.download"></script>
+<script src="./Tools - Image &amp; PDF Tools_files/pdf.min.js.download"></script>
+<script src="./Tools - Image &amp; PDF Tools_files/qrcode.min.js.download"></script>
+<script src="./Tools - Image &amp; PDF Tools_files/tesseract.min.js.download"></script>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial,Helvetica,sans-serif;
+    background:#06101d;
+    color:white;
+}
+
+header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:17px 6%;
+    background:rgba(7,17,31,.92);
+    backdrop-filter:blur(15px);
+    border-bottom:1px solid #213650;
+}
+
+.logo{
+    font-size:25px;
+    font-weight:bold;
+    color:#48ddff;
+}
+
+nav a{
+    color:#d3deea;
+    text-decoration:none;
+    margin-left:22px;
+}
+
+nav a:hover{
+    color:#48ddff;
+}
+
+.hero{
+    text-align:center;
+    padding:65px 20px 40px;
+}
+
+.hero h1{
+    font-size:45px;
+    margin-bottom:15px;
+}
+
+.hero h1 span{
+    color:#48ddff;
+}
+
+.hero p{
+    color:#9aadc2;
+    font-size:17px;
+}
+
+.search{
+    width:min(650px,92%);
+    margin:28px auto;
+}
+
+.search input{
+    width:100%;
+    padding:16px 20px;
+    border-radius:30px;
+    border:1px solid #29425e;
+    outline:none;
+    background:#0d1c30;
+    color:white;
+    font-size:15px;
+}
+
+.container{
+    width:min(1200px,92%);
+    margin:auto;
+}
+
+.category{
+    margin:35px 0 17px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(205px,1fr));
+    gap:18px;
+}
+
+.card{
+    background:linear-gradient(145deg,#0e1e33,#0a1728);
+    border:1px solid #213a55;
+    border-radius:18px;
+    padding:22px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+    border-color:#48ddff;
+    box-shadow:0 12px 35px rgba(0,0,0,.5);
+}
+
+.icon{
+    font-size:32px;
+    margin-bottom:12px;
+}
+
+.card h3{
+    margin-bottom:8px;
+}
+
+.card p{
+    color:#8fa4bb;
+    font-size:13px;
+    line-height:1.5;
+}
+
+.modal{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:500;
+    background:rgba(0,0,0,.78);
+    align-items:center;
+    justify-content:center;
+    padding:18px;
+}
+
+.box{
+    width:min(700px,100%);
+    max-height:92vh;
+    overflow:auto;
+    background:#0d1c30;
+    border:1px solid #2b4663;
+    border-radius:23px;
+    padding:27px;
+}
+
+.close{
+    float:right;
+    font-size:25px;
+    cursor:pointer;
+    color:#b9c9d9;
+}
+
+.close:hover{
+    color:#ff5c6c;
+}
+
+.box h2{
+    color:#48ddff;
+    margin-bottom:20px;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:13px;
+    margin:7px 0;
+    border-radius:10px;
+    border:1px solid #29425e;
+    background:#07111f;
+    color:white;
+    outline:none;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:#48ddff;
+    color:#00131b;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    filter:brightness(1.1);
+}
+
+button.secondary{
+    background:#233a55;
+    color:white;
+}
+
+button.download{
+    background:#20d889;
+    color:#00160e;
+    font-size:15px;
+}
+
+button.copy{
+    background:#9b7cff;
+    color:white;
+}
+
+.preview{
+    max-width:100%;
+    max-height:320px;
+    display:block;
+    margin:18px auto;
+    border-radius:13px;
+    background:white;
+}
+
+.hidden{
+    display:none !important;
+}
+
+.info{
+    background:#07111f;
+    border:1px solid #1f344c;
+    padding:14px;
+    border-radius:10px;
+    margin-top:12px;
+    color:#b8c8d8;
+    line-height:1.7;
+}
+
+.result{
+    margin-top:17px;
+    padding:15px;
+    background:#07111f;
+    border:1px solid #233b55;
+    border-radius:12px;
+}
+
+.result-title{
+    color:#48ddff;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+}
+
+.qr-box{
+    background:white;
+    width:max-content;
+    max-width:100%;
+    margin:20px auto;
+    padding:15px;
+    border-radius:12px;
+}
+
+.page-result{
+    background:#07111f;
+    border:1px solid #29405b;
+    border-radius:12px;
+    padding:15px;
+    margin-top:15px;
+}
+
+.page-result img{
+    width:100%;
+    max-height:400px;
+    object-fit:contain;
+    background:white;
+    border-radius:8px;
+}
+
+#signCanvas{
+    width:100%;
+    height:auto;
+    background:white;
+    border-radius:12px;
+    touch-action:none;
+    margin-top:10px;
+}
+
+footer{
+    text-align:center;
+    padding:55px 20px;
+    margin-top:60px;
+    color:#71869c;
+    border-top:1px solid #172b42;
+}
+
+@media(max-width:600px){
+
+    .hero h1{
+        font-size:31px;
+    }
+
+    nav{
+        display:none;
+    }
+
+    .row{
+        grid-template-columns:1fr;
+    }
+
+    .box{
+        padding:20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">⚡ PixelTools</div>
+
+<nav>
+<a href="http://127.0.0.1:5500/pro.html#">Home</a>
+<a href="http://127.0.0.1:5500/pro.html#tools">Tools</a>
+</nav>
+
+</header>
+
+
+<section class="hero">
+
+<h1>All-in-One <span>Image &amp; PDF</span> Tools</h1>
+
+<p>
+Resize • Compress • Convert • PDF • OCR • Edit
+</p>
+
+<div class="search">
+<input id="search" placeholder="🔎 Search any tool..." oninput="searchTools()">
+</div>
+
+</section>
+
+
+<main class="container" id="tools">
+
+
+<h2 class="category">🖼️ Image Tools</h2>
+
+<div class="grid">
+
+
+<div class="card" data-name="image resize">
+<div class="icon">📐</div>
+<h3>Image Resize</h3>
+<p>Change image width and height.</p>
+</div>
+
+
+<div class="card" data-name="compress image kb mb">
+<div class="icon">📦</div>
+<h3>Compress to KB</h3>
+<p>Make image 20KB, 50KB, 100KB etc.</p>
+</div>
+
+
+<div class="card" data-name="jpg png webp converter">
+<div class="icon">🔄</div>
+<h3>Image Converter</h3>
+<p>Convert JPG, PNG and WEBP.</p>
+</div>
+
+
+<div class="card" data-name="crop image">
+<div class="icon">✂️</div>
+<h3>Crop Image</h3>
+<p>Crop your photo.</p>
+</div>
+
+
+<div class="card" data-name="rotate image">
+<div class="icon">🔃</div>
+<h3>Rotate Image</h3>
+<p>Rotate 90, 180 or 270 degrees.</p>
+</div>
+
+
+<div class="card" data-name="flip image">
+<div class="icon">↔️</div>
+<h3>Flip Image</h3>
+<p>Flip horizontal or vertical.</p>
+</div>
+
+
+<div class="card" data-name="brightness contrast image">
+<div class="icon">☀️</div>
+<h3>Brightness &amp; Contrast</h3>
+<p>Adjust image appearance.</p>
+</div>
+
+
+<div class="card" data-name="watermark image">
+<div class="icon">💧</div>
+<h3>Watermark</h3>
+<p>Add watermark text.</p>
+</div>
+
+
+<div class="card" data-name="text image">
+<div class="icon">🔤</div>
+<h3>Text on Image</h3>
+<p>Add text to photo.</p>
+</div>
+
+
+<div class="card" data-name="passport photo">
+<div class="icon">🪪</div>
+<h3>Passport Photo</h3>
+<p>Create passport-size style photo.</p>
+</div>
+
+
+<div class="card" data-name="image information metadata">
+<div class="icon">ℹ️</div>
+<h3>Image Information</h3>
+<p>Check size, type and dimensions.</p>
+</div>
+
+
+<div class="card" data-name="image to text ocr">
+<div class="icon">🔎</div>
+<h3>Image → Text</h3>
+<p>Extract text from image.</p>
+</div>
+
+</div>
+
+
+<h2 class="category">📄 PDF Tools</h2>
+
+<div class="grid">
+
+
+<div class="card" data-name="images to pdf jpg png">
+<div class="icon">📄</div>
+<h3>Images → PDF</h3>
+<p>Convert multiple images into PDF.</p>
+</div>
+
+
+<div class="card" data-name="pdf to images jpg">
+<div class="icon">🖼️</div>
+<h3>PDF → Images</h3>
+<p>Convert PDF pages into images.</p>
+</div>
+
+
+<div class="card" data-name="merge pdf">
+<div class="icon">📚</div>
+<h3>Merge PDF</h3>
+<p>Combine multiple PDFs.</p>
+</div>
+
+
+<div class="card" data-name="split pdf">
+<div class="icon">✂️</div>
+<h3>Split PDF</h3>
+<p>Extract selected pages.</p>
+</div>
+
+
+<div class="card" data-name="delete pdf pages">
+<div class="icon">🗑️</div>
+<h3>Delete PDF Pages</h3>
+<p>Remove selected pages.</p>
+</div>
+
+
+<div class="card" data-name="reorder pdf pages">
+<div class="icon">🔀</div>
+<h3>Reorder PDF</h3>
+<p>Change PDF page order.</p>
+</div>
+
+
+<div class="card" data-name="pdf watermark">
+<div class="icon">💧</div>
+<h3>PDF Watermark</h3>
+<p>Add watermark to PDF.</p>
+</div>
+
+</div>
+
+
+<h2 class="category">🛠️ Extra Tools</h2>
+
+<div class="grid">
+
+
+<div class="card" data-name="qr generator">
+<div class="icon">🔳</div>
+<h3>QR Generator</h3>
+<p>Create and download QR.</p>
+</div>
+
+
+<div class="card" data-name="signature maker">
+<div class="icon">✍️</div>
+<h3>Signature Maker</h3>
+<p>Draw and download signature.</p>
+</div>
+
+
+</div>
+
+</main>
+
+
+<footer>
+
+⚡ PixelTools<br><br>
+Fast • Simple • Browser Based
+
+</footer>
+
+
+<div class="modal" id="modal">
+
+<div class="box">
+
+<span class="close" onclick="closeTool()">✕</span>
+
+<h2 id="title">Tool</h2>
+
+<div id="content"></div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const $ = id => document.getElementById(id);
+
+let currentImage = null;
+let selectedFile = null;
+let resultBlob = null;
+let resultName = "pixeltools";
+
+
+/* =========================
+   CARD CLICK
+========================= */
+
+document.querySelectorAll(".card").forEach(card => {
+
+card.addEventListener("click", () => {
+
+let name = card.dataset.name;
+
+if(name.includes("resize"))
+openTool("resize");
+
+else if(name.includes("compress"))
+openTool("compress");
+
+else if(name.includes("converter"))
+openTool("convert");
+
+else if(name.includes("crop"))
+openTool("crop");
+
+else if(name.includes("rotate"))
+openTool("rotate");
+
+else if(name.includes("flip"))
+openTool("flip");
+
+else if(name.includes("brightness"))
+openTool("adjust");
+
+else if(name.includes("watermark image"))
+openTool("watermark");
+
+else if(name.includes("text image"))
+openTool("text");
+
+else if(name.includes("passport"))
+openTool("passport");
+
+else if(name.includes("information"))
+openTool("metadata");
+
+else if(name.includes("ocr"))
+openTool("ocr");
+
+else if(name.includes("images to pdf"))
+openTool("topdf");
+
+else if(name.includes("pdf to images"))
+openTool("pdfimage");
+
+else if(name.includes("merge"))
+openTool("mergepdf");
+
+else if(name.includes("split"))
+openTool("splitpdf");
+
+else if(name.includes("delete"))
+openTool("deletepdf");
+
+else if(name.includes("reorder"))
+openTool("reorderpdf");
+
+else if(name.includes("pdf watermark"))
+openTool("pdfwatermark");
+
+else if(name.includes("qr"))
+openTool("qr");
+
+else if(name.includes("signature"))
+openTool("signature");
+
+});
+
+});
+
+
+/* =========================
+   MODAL
+========================= */
+
+function openTool(tool){
+
+$("modal").style.display="flex";
+
+let titles={
+
+resize:"📐 Image Resize",
+compress:"📦 Compress Image",
+convert:"🔄 Image Converter",
+crop:"✂️ Crop Image",
+rotate:"🔃 Rotate Image",
+flip:"↔️ Flip Image",
+adjust:"☀️ Brightness & Contrast",
+watermark:"💧 Image Watermark",
+text:"🔤 Text on Image",
+passport:"🪪 Passport Photo",
+metadata:"ℹ️ Image Information",
+ocr:"🔎 Image → Text",
+topdf:"📄 Images → PDF",
+pdfimage:"🖼️ PDF → Images",
+mergepdf:"📚 Merge PDF",
+splitpdf:"✂️ Split PDF",
+deletepdf:"🗑️ Delete PDF Pages",
+reorderpdf:"🔀 Reorder PDF",
+pdfwatermark:"💧 PDF Watermark",
+qr:"🔳 QR Generator",
+signature:"✍️ Signature Maker"
+
+};
+
+$("title").innerText=titles[tool];
+
+$("content").innerHTML="";
+
+
+if([
+"resize",
+"compress",
+"convert",
+"crop",
+"rotate",
+"flip",
+"adjust",
+"watermark",
+"text",
+"passport",
+"metadata",
+"ocr"
+].includes(tool)){
+
+imageUI(tool);
+
+}
+
+else if(tool==="topdf")
+pdfUploadUI();
+
+else if(tool==="pdfimage")
+pdfImageUI();
+
+else if(tool==="mergepdf")
+mergeUI();
+
+else if([
+"splitpdf",
+"deletepdf",
+"reorderpdf",
+"pdfwatermark"
+].includes(tool))
+pdfEditUI(tool);
+
+else if(tool==="qr")
+qrUI();
+
+else if(tool==="signature")
+signatureUI();
+
+}
+
+
+function closeTool(){
+
+$("modal").style.display="none";
+
+}
+
+
+/* =========================
+   IMAGE UI
+========================= */
+
+function imageUI(tool){
+
+$("content").innerHTML=`
+
+<input
+type="file"
+id="imageFile"
+accept="image/*">
+
+<img id="imgPreview"
+class="preview hidden">
+
+<div id="extra"></div>
+
+<div id="result"></div>
+
+`;
+
+$("imageFile").onchange=loadImage;
+
+
+if(tool==="resize"){
+
+$("extra").innerHTML=`
+
+<div class="row">
+
+<input
+id="w"
+type="number"
+placeholder="Width px">
+
+<input
+id="h"
+type="number"
+placeholder="Height px">
+
+</div>
+
+<button onclick="doResize()">
+Resize Image
+</button>
+
+`;
+
+}
+
+
+if(tool==="compress"){
+
+$("extra").innerHTML=`
+
+<input
+id="targetKB"
+type="number"
+placeholder="Target size e.g. 100">
+
+<button onclick="compressExact()">
+Compress to Target KB
+</button>
+
+<p class="info">
+Example: 2 MB photo ko approximately
+100 KB target ke around compress karega.
+</p>
+
+`;
+
+}
+
+
+if(tool==="convert"){
+
+$("extra").innerHTML=`
+
+<select id="format">
+
+<option value="image/jpeg">JPG</option>
+<option value="image/png">PNG</option>
+<option value="image/webp">WEBP</option>
+
+</select>
+
+<button onclick="convertImage()">
+Convert Image
+</button>
+
+`;
+
+}
+
+
+if(tool==="crop"){
+
+$("extra").innerHTML=`
+
+<button onclick="cropImage()">
+Crop Center
+</button>
+
+`;
+
+}
+
+
+if(tool==="rotate"){
+
+$("extra").innerHTML=`
+
+<select id="angle">
+
+<option value="90">90°</option>
+<option value="180">180°</option>
+<option value="270">270°</option>
+
+</select>
+
+<button onclick="rotateImage()">
+Rotate Image
+</button>
+
+`;
+
+}
+
+
+if(tool==="flip"){
+
+$("extra").innerHTML=`
+
+<select id="flipMode">
+
+<option value="x">Horizontal</option>
+<option value="y">Vertical</option>
+
+</select>
+
+<button onclick="flipImage()">
+Flip Image
+</button>
+
+`;
+
+}
+
+
+if(tool==="adjust"){
+
+$("extra").innerHTML=`
+
+<label>Brightness</label>
+
+<input
+id="bright"
+type="range"
+min="-100"
+max="100"
+value="0">
+
+<label>Contrast</label>
+
+<input
+id="contrast"
+type="range"
+min="-100"
+max="100"
+value="0">
+
+<button onclick="adjustImage()">
+Apply Changes
+</button>
+
+`;
+
+}
+
+
+if(tool==="watermark"){
+
+$("extra").innerHTML=`
+
+<input
+id="wm"
+placeholder="Enter watermark">
+
+<button onclick="watermarkImage()">
+Add Watermark
+</button>
+
+`;
+
+}
+
+
+if(tool==="text"){
+
+$("extra").innerHTML=`
+
+<input
+id="photoText"
+placeholder="Enter text">
+
+<button onclick="textImage()">
+Add Text
+</button>
+
+`;
+
+}
+
+
+if(tool==="passport"){
+
+$("extra").innerHTML=`
+
+<button onclick="passportImage()">
+Create Passport Photo
+</button>
+
+`;
+
+}
+
+
+if(tool==="metadata"){
+
+$("extra").innerHTML=`
+
+<button onclick="imageInfo()">
+Show Image Information
+</button>
+
+`;
+
+}
+
+
+if(tool==="ocr"){
+
+$("extra").innerHTML=`
+
+<select id="lang">
+
+<option value="eng">
+English
+</option>
+
+<option value="hin">
+Hindi
+</option>
+
+</select>
+
+<button onclick="runOCR()">
+Extract Text
+</button>
+
+`;
+
+}
+
+}
+
+
+/* =========================
+   LOAD IMAGE
+========================= */
+
+function loadImage(){
+
+let file=$("imageFile").files[0];
+
+if(!file)
+return;
+
+selectedFile=file;
+
+let url=URL.createObjectURL(file);
+
+let img=new Image();
+
+img.onload=()=>{
+
+currentImage=img;
+
+$("imgPreview").src=url;
+
+$("imgPreview").classList.remove("hidden");
+
+};
+
+img.src=url;
+
+}
+
+
+/* =========================
+   CANVAS
+========================= */
+
+function makeCanvas(
+w=currentImage.width,
+h=currentImage.height
+){
+
+let c=document.createElement("canvas");
+
+c.width=w;
+c.height=h;
+
+let ctx=c.getContext("2d");
+
+ctx.drawImage(
+currentImage,
+0,
+0,
+w,
+h
+);
+
+return c;
+
+}
+
+
+/* =========================
+   RESULT + DOWNLOAD
+========================= */
+
+function showResult(
+blob,
+name,
+type,
+preview=true
+){
+
+resultBlob=blob;
+resultName=name;
+
+let url=URL.createObjectURL(blob);
+
+$("result").innerHTML=`
+
+<div class="result">
+
+<div class="result-title">
+✅ Result Ready
+</div>
+
+${
+preview && type.startsWith("image/")
+?
+`<img
+class="preview"
+src="${url}">`
+:""
+}
+
+<div class="info">
+File: ${name}<br>
+Size: ${(blob.size/1024).toFixed(2)} KB<br>
+${(blob.size/1024/1024).toFixed(2)} MB
+</div>
+
+<button
+class="download"
+onclick="downloadResult()">
+
+⬇️ Download ${type==="application/pdf"?"PDF":"File"}
+
+</button>
+
+</div>
+
+`;
+
+}
+
+
+function downloadResult(){
+
+if(!resultBlob)
+return;
+
+let url=URL.createObjectURL(resultBlob);
+
+let a=document.createElement("a");
+
+a.href=url;
+a.download=resultName;
+
+document.body.appendChild(a);
+
+a.click();
+
+a.remove();
+
+setTimeout(()=>{
+URL.revokeObjectURL(url);
+},1000);
+
+}
+
+
+/* =========================
+   CANVAS DOWNLOAD
+========================= */
+
+function canvasResult(
+canvas,
+type="image/jpeg",
+quality=.92,
+name="pixeltools.jpg"
+){
+
+canvas.toBlob(blob=>{
+
+showResult(
+blob,
+name,
+type,
+true
+);
+
+},type,quality);
+
+}
+
+
+/* =========================
+   RESIZE
+========================= */
+
+function doResize(){
+
+if(!currentImage)
+return alert("Pehle image select karo.");
+
+let w=+$("w").value;
+let h=+$("h").value;
+
+if(!w||!h)
+return alert("Width aur Height enter karo.");
+
+let c=makeCanvas(w,h);
+
+canvasResult(
+c,
+"image/jpeg",
+.92,
+"resized-image.jpg"
+);
+
+}
+
+
+/* =========================
+   EXACT KB
+========================= */
+
+function compressExact(){
+
+if(!currentImage)
+return alert("Pehle image select karo.");
+
+let target=+$("targetKB").value;
+
+if(!target)
+return alert("Target KB enter karo.");
+
+let max=target*1024;
+
+let w=currentImage.width;
+let h=currentImage.height;
+
+let canvas=document.createElement("canvas");
+
+canvas.width=w;
+canvas.height=h;
+
+let ctx=canvas.getContext("2d");
+
+ctx.drawImage(
+currentImage,
+0,
+0
+);
+
+let quality=.95;
+
+function test(){
+
+canvas.toBlob(blob=>{
+
+if(blob.size<=max){
+
+showResult(
+blob,
+"compressed-"+target+"KB.jpg",
+"image/jpeg",
+true
+);
+
+return;
+
+}
+
+quality-=.05;
+
+if(quality>=.1){
+
+test();
+
+return;
+
+}
+
+/* quality low hone ke baad dimensions reduce */
+
+w=Math.floor(w*.88);
+h=Math.floor(h*.88);
+
+if(w<100||h<100){
+
+alert(
+"Target size bahut chhota hai. Thoda bada KB target try karo."
+);
+
+return;
+
+}
+
+canvas.width=w;
+canvas.height=h;
+
+ctx=canvas.getContext("2d");
+
+ctx.drawImage(
+currentImage,
+0,
+0,
+w,
+h
+);
+
+quality=.85;
+
+test();
+
+},"image/jpeg",quality);
+
+}
+
+test();
+
+}
+
+
+/* =========================
+   CONVERTER
+========================= */
+
+function convertImage(){
+
+if(!currentImage)
+return alert("Pehle image select karo.");
+
+let type=$("format").value;
+
+let ext=
+type==="image/png"?"png":
+type==="image/webp"?"webp":"jpg";
+
+canvasResult(
+makeCanvas(),
+type,
+.92,
+"converted-image."+ext
+);
+
+}
+
+
+/* =========================
+   CROP
+========================= */
+
+function cropImage(){
+
+if(!currentImage)
+return alert("Pehle image select karo.");
+
+let s=Math.min(
+currentImage.width,
+currentImage.height
+);
+
+let x=(currentImage.width-s)/2;
+let y=(currentImage.height-s)/2;
+
+let c=document.createElement("canvas");
+
+c.width=s;
+c.height=s;
+
+let ctx=c.getContext("2d");
+
+ctx.drawImage(
+currentImage,
+x,y,s,s,
+0,0,s,s
+);
+
+canvasResult(
+c,
+"image/jpeg",
+.92,
+"cropped-image.jpg"
+);
+
+}
+
+
+/* =========================
+   ROTATE
+========================= */
+
+function rotateImage(){
+
+let angle=+$("angle").value;
+
+let swap=angle===90||angle===270;
+
+let c=document.createElement("canvas");
+
+c.width=swap?
+currentImage.height:
+currentImage.width;
+
+c.height=swap?
+currentImage.width:
+currentImage.height;
+
+let ctx=c.getContext("2d");
+
+ctx.translate(
+c.width/2,
+c.height/2
+);
+
+ctx.rotate(
+angle*Math.PI/180
+);
+
+ctx.drawImage(
+currentImage,
+-currentImage.width/2,
+-currentImage.height/2
+);
+
+canvasResult(
+c,
+"image/jpeg",
+.92,
+"rotated-image.jpg"
+);
+
+}
+
+
+/* =========================
+   FLIP
+========================= */
+
+function flipImage(){
+
+let c=makeCanvas();
+
+let ctx=c.getContext("2d");
+
+ctx.clearRect(
+0,0,c.width,c.height
+);
+
+ctx.save();
+
+if($("flipMode").value==="x"){
+
+ctx.translate(c.width,0);
+ctx.scale(-1,1);
+
+}else{
+
+ctx.translate(0,c.height);
+ctx.scale(1,-1);
+
+}
+
+ctx.drawImage(
+currentImage,
+0,
+0
+);
+
+ctx.restore();
+
+canvasResult(
+c,
+"image/jpeg",
+.92,
+"flipped-image.jpg"
+);
+
+}
+
+
+/* =========================
+   BRIGHTNESS / CONTRAST
+========================= */
+
+function adjustImage(){
+
+let c=makeCanvas();
+
+let ctx=c.getContext("2d");
+
+let data=ctx.getImageData(
+0,0,c.width,c.height
+);
+
+let p=data.data;
+
+let brightness=+$("bright").value;
+let contrast=+$("contrast").value;
+
+let factor=
+(259*(contrast+255))/
+(255*(259-contrast));
+
+for(let i=0;i<p.length;i+=4){
+
+p[i]=clamp(
+factor*(p[i]-128)+128+brightness
+);
+
+p[i+1]=clamp(
+factor*(p[i+1]-128)+128+brightness
+);
+
+p[i+2]=clamp(
+factor*(p[i+2]-128)+128+brightness
+);
+
+}
+
+ctx.putImageData(
+data,
+0,
+0
+);
+
+canvasResult(
+c,
+"image/jpeg",
+.92,
+"edited-image.jpg"
+);
+
+}
+
+
+function clamp(x){
+
+return Math.max(
+0,
+Math.min(255,x)
+);
+
+}
+
+
+/* =========================
+   WATERMARK
+========================= */
+
+function watermarkImage(){
+
+let text=$("wm").value;
+
+if(!text)
+return alert("Watermark text enter karo.");
+
+let c=makeCanvas();
+
+let ctx=c.getContext("2d");
+
+ctx.font=
+Math.max(25,c.width/20)+"px Arial";
+
+ctx.fillStyle=
+"rgba(255,255,255,.55)";
+
+ctx.textAlign="center";
+
+ctx.fillText(
+text,
+c.width/2,
+c.height/2
+);
+
+canvasResult(
+c,
+"image/jpeg",
+.92,
+"watermarked-image.jpg"
+);
+
+}
+
+
+/* =========================
+   TEXT IMAGE
+========================= */
+
+function textImage(){
+
+let text=$("photoText").value;
+
+if(!text)
+return alert("Text enter karo.");
+
+let c=makeCanvas();
+
+let ctx=c.getContext("2d");
+
+ctx.font=
+Math.max(25,c.width/18)+"px Arial";
+
+ctx.textAlign="center";
+
+ctx.lineWidth=5;
+
+ctx.strokeStyle="black";
+
+ctx.fillStyle="white";
+
+ctx.strokeText(
+text,
+c.width/2,
+c.height-40
+);
+
+ctx.fillText(
+text,
+c.width/2,
+c.height-40
+);
+
+canvasResult(
+c,
+"image/jpeg",
+.92,
+"text-image.jpg"
+);
+
+}
+
+
+/* =========================
+   PASSPORT
+========================= */
+
+function passportImage(){
+
+let c=document.createElement("canvas");
+
+c.width=413;
+c.height=531;
+
+let ctx=c.getContext("2d");
+
+let scale=Math.max(
+c.width/currentImage.width,
+c.height/currentImage.height
+);
+
+let w=currentImage.width*scale;
+let h=currentImage.height*scale;
+
+ctx.drawImage(
+currentImage,
+(c.width-w)/2,
+(c.height-h)/2,
+w,
+h
+);
+
+canvasResult(
+c,
+"image/jpeg",
+.95,
+"passport-photo.jpg"
+);
+
+}
+
+
+/* =========================
+   IMAGE INFORMATION
+========================= */
+
+function imageInfo(){
+
+let f=selectedFile;
+
+$("result").innerHTML=`
+
+<div class="result">
+
+<div class="result-title">
+📊 Image Information
+</div>
+
+<div class="info">
+
+File Name: ${f.name}<br>
+
+Type: ${f.type}<br>
+
+Size: ${(f.size/1024).toFixed(2)} KB<br>
+
+MB: ${(f.size/1024/1024).toFixed(2)} MB<br>
+
+Dimensions:
+${currentImage.width} × ${currentImage.height}px
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================
+   OCR
+========================= */
+
+async function runOCR(){
+
+if(!selectedFile)
+return alert("Image select karo.");
+
+$("result").innerHTML=`
+
+<div class="result">
+<div class="result-title">
+🔎 OCR Processing...
+</div>
+<p id="ocrStatus">
+Please wait...
+</p>
+</div>
+`;
+
+let lang=$("lang").value;
+
+let result=await Tesseract.recognize(
+selectedFile,
+lang,
+{
+logger:m=>{
+
+if(m.status){
+
+$("ocrStatus").innerText=
+m.status+" "+
+Math.round((m.progress||0)*100)+"%";
+
+}
+
+}
+}
+);
+
+let text=result.data.text;
+
+$("result").innerHTML=`
+
+<div class="result">
+
+<div class="result-title">
+✅ Text Extracted
+</div>
+
+<textarea
+id="ocrText"
+rows="12">${escapeHTML(text)}</textarea>
+
+<button
+class="copy"
+onclick="copyOCR()">
+
+📋 Copy Text
+
+</button>
+
+<button
+class="download"
+onclick="downloadText()">
+
+⬇️ Download TXT
+
+</button>
+
+</div>
+
+`;
+
+}
+
+
+function escapeHTML(text){
+
+return text
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;");
+
+}
+
+
+function copyOCR(){
+
+navigator.clipboard.writeText(
+$("ocrText").value
+);
+
+alert("Text copied.");
+
+}
+
+
+function downloadText(){
+
+let blob=new Blob(
+[$("ocrText").value],
+{type:"text/plain"}
+);
+
+showResult(
+blob,
+"extracted-text.txt",
+"text/plain",
+false
+);
+
+}
+
+
+/* =========================
+   IMAGES → PDF
+========================= */
+
+function pdfUploadUI(){
+
+$("content").innerHTML=`
+
+<input
+type="file"
+id="pdfImages"
+accept="image/*"
+multiple>
+
+<div class="info">
+Multiple images select kar sakte ho.
+</div>
+
+<button onclick="imagesToPDF()">
+📄 Create PDF
+</button>
+
+<div id="result"></div>
+
+`;
+
+}
+
+
+async function imagesToPDF(){
+
+let files=[
+...$("pdfImages").files
+];
+
+if(!files.length)
+return alert("Images select karo.");
+
+let {jsPDF}=window.jspdf;
+
+let pdf=new jsPDF();
+
+for(let i=0;i<files.length;i++){
+
+if(i)
+pdf.addPage();
+
+let data=await fileData(files[i]);
+
+let img=await loadImageURL(data);
+
+let pw=
+pdf.internal.pageSize.getWidth();
+
+let ph=
+pdf.internal.pageSize.getHeight();
+
+let ratio=Math.min(
+pw/img.width,
+ph/img.height
+);
+
+let w=img.width*ratio;
+let h=img.height*ratio;
+
+pdf.addImage(
+img,
+"JPEG",
+(pw-w)/2,
+(ph-h)/2,
+w,
+h
+);
+
+}
+
+let blob=pdf.output("blob");
+
+showResult(
+blob,
+"images-to-pdf.pdf",
+"application/pdf",
+false
+);
+
+}
+
+
+/* =========================
+   PDF → IMAGES
+========================= */
+
+function pdfImageUI(){
+
+$("content").innerHTML=`
+
+<input
+type="file"
+id="pdfFile"
+accept="application/pdf">
+
+<button onclick="pdfToImages()">
+Convert PDF
+</button>
+
+<div id="pdfResult"></div>
+
+`;
+
+}
+
+
+async function pdfToImages(){
+
+let file=$("pdfFile").files[0];
+
+if(!file)
+return alert("PDF select karo.");
+
+let data=await file.arrayBuffer();
+
+let pdf=
+await pdfjsLib.getDocument({
+data
+}).promise;
+
+$("pdfResult").innerHTML="";
+
+for(let i=1;i<=pdf.numPages;i++){
+
+let page=await pdf.getPage(i);
+
+let viewport=
+page.getViewport({scale:1.5});
+
+let c=document.createElement("canvas");
+
+c.width=viewport.width;
+c.height=viewport.height;
+
+await page.render({
+canvasContext:c.getContext("2d"),
+viewport:viewport
+}).promise;
+
+let blob=await new Promise(
+resolve=>
+c.toBlob(
+resolve,
+"image/jpeg",
+.92
+)
+);
+
+let url=URL.createObjectURL(blob);
+
+let div=document.createElement("div");
+
+div.className="page-result";
+
+div.innerHTML=`
+
+<h3>Page ${i}</h3>
+
+<img src="${url}">
+
+<button class="download">
+⬇️ Download Page ${i}
+</button>
+
+`;
+
+div.querySelector("button")
+.onclick=()=>{
+
+let a=document.createElement("a");
+
+a.href=url;
+a.download="pdf-page-"+i+".jpg";
+
+a.click();
+
+};
+
+$("pdfResult").appendChild(div);
+
+}
+
+}
+
+
+/* =========================
+   MERGE PDF
+========================= */
+
+function mergeUI(){
+
+$("content").innerHTML=`
+
+<input
+type="file"
+id="mergeFiles"
+accept="application/pdf"
+multiple>
+
+<button onclick="mergePDF()">
+📚 Merge PDFs
+</button>
+
+<div id="result"></div>
+
+`;
+
+}
+
+
+async function mergePDF(){
+
+let files=[
+...$("mergeFiles").files
+];
+
+if(files.length<2)
+return alert("At least 2 PDFs select karo.");
+
+let result=
+await PDFLib.PDFDocument.create();
+
+for(let file of files){
+
+let bytes=
+await file.arrayBuffer();
+
+let pdf=
+await PDFLib.PDFDocument.load(bytes);
+
+let pages=
+await result.copyPages(
+pdf,
+pdf.getPageIndices()
+);
+
+pages.forEach(
+page=>result.addPage(page)
+);
+
+}
+
+let bytes=await result.save();
+
+let blob=new Blob(
+[bytes],
+{type:"application/pdf"}
+);
+
+showResult(
+blob,
+"merged.pdf",
+"application/pdf",
+false
+);
+
+}
+
+
+/* =========================
+   PDF EDIT
+========================= */
+
+function pdfEditUI(tool){
+
+let extra="";
+
+if(tool==="pdfwatermark"){
+
+extra=`
+
+<input
+id="pdfWM"
+placeholder="Watermark text">
+
+`;
+
+}
+
+$("content").innerHTML=`
+
+<input
+type="file"
+id="editPDF"
+accept="application/pdf">
+
+<input
+id="pages"
+placeholder="Pages e.g. 1,3,5">
+
+${extra}
+
+<div class="info">
+Page numbers 1 se start honge.
+</div>
+
+<button onclick="processPDF('${tool}')">
+Process PDF
+</button>
+
+<div id="result"></div>
+
+`;
+
+}
+
+
+async function processPDF(tool){
+
+let file=$("editPDF").files[0];
+
+if(!file)
+return alert("PDF select karo.");
+
+let bytes=
+await file.arrayBuffer();
+
+let src=
+await PDFLib.PDFDocument.load(bytes);
+
+let out=
+await PDFLib.PDFDocument.create();
+
+let indexes;
+
+if(tool==="splitpdf"){
+
+indexes=parsePages(
+$("pages").value,
+src.getPageCount()
+);
+
+if(!indexes.length)
+return alert("Pages enter karo.");
+
+}
+
+
+else if(tool==="deletepdf"){
+
+let remove=
+new Set(
+parsePages(
+$("pages").value,
+src.getPageCount()
+)
+);
+
+indexes=
+src.getPageIndices()
+.filter(
+x=>!remove.has(x)
+);
+
+}
+
+
+else if(tool==="reorderpdf"){
+
+indexes=parsePages(
+$("pages").value,
+src.getPageCount()
+);
+
+if(!indexes.length)
+return alert("New page order enter karo.");
+
+}
+
+
+else{
+
+indexes=
+src.getPageIndices();
+
+}
+
+
+let pages=
+await out.copyPages(
+src,
+indexes
+);
+
+pages.forEach(
+p=>out.addPage(p)
+);
+
+
+/* watermark */
+
+if(tool==="pdfwatermark"){
+
+let font=
+await out.embedFont(
+PDFLib.StandardFonts.Helvetica
+);
+
+let text=
+$("pdfWM").value ||
+"PixelTools";
+
+for(let page of out.getPages()){
+
+let size=page.getSize();
+
+page.drawText(
+text,
+{
+x:size.width/2-50,
+y:size.height/2,
+size:30,
+font:font,
+opacity:.25,
+rotate:PDFLib.degrees(30)
+}
+);
+
+}
+
+}
+
+let result=
+await out.save();
+
+let blob=new Blob(
+[result],
+{type:"application/pdf"}
+);
+
+showResult(
+blob,
+tool+".pdf",
+"application/pdf",
+false
+);
+
+}
+
+
+function parsePages(str,total){
+
+return [
+...new Set(
+str
+.split(",")
+.map(x=>parseInt(x.trim())-1)
+.filter(
+x=>x>=0 && x<total
+)
+)
+];
+
+}
+
+
+/* =========================
+   QR
+========================= */
+
+function qrUI(){
+
+$("content").innerHTML=`
+
+<input
+id="qrText"
+placeholder="Enter URL or text">
+
+<div
+id="qrcode"
+class="qr-box">
+</div>
+
+<button onclick="makeQR()">
+Generate QR
+</button>
+
+<div id="result"></div>
+
+`;
+
+}
+
+
+function makeQR(){
+
+let text=$("qrText").value;
+
+if(!text)
+return alert("Text ya URL enter karo.");
+
+$("qrcode").innerHTML="";
+
+new QRCode(
+$("qrcode"),
+{
+text:text,
+width:250,
+height:250
+}
+);
+
+setTimeout(()=>{
+
+let img=
+$("qrcode").querySelector("img");
+
+if(img){
+
+fetch(img.src)
+.then(r=>r.blob())
+.then(blob=>{
+
+$("result").innerHTML=`
+
+<div class="result">
+
+<div class="result-title">
+✅ QR Ready
+</div>
+
+<img
+class="preview"
+src="${img.src}">
+
+<button
+class="download"
+onclick="downloadQR()">
+
+⬇️ Download QR
+
+</button>
+
+</div>
+
+`;
+
+window.qrBlob=blob;
+
+});
+
+}
+
+},500);
+
+}
+
+
+function downloadQR(){
+
+if(!window.qrBlob)
+return;
+
+downloadBlob(
+window.qrBlob,
+"qr-code.png"
+);
+
+}
+
+
+/* =========================
+   SIGNATURE
+========================= */
+
+function signatureUI(){
+
+$("content").innerHTML=`
+
+<p class="info">
+Neeche box me mouse ya finger se signature draw karo.
+</p>
+
+<canvas
+id="signCanvas"
+width="600"
+height="280">
+</canvas>
+
+<button
+class="secondary"
+onclick="clearSign()">
+Clear Signature
+</button>
+
+<button
+onclick="prepareSignature()">
+Prepare Download
+</button>
+
+<div id="result"></div>
+
+`;
+
+setTimeout(
+initSignature,
+100
+);
+
+}
+
+
+function initSignature(){
+
+let c=$("signCanvas");
+
+let ctx=c.getContext("2d");
+
+ctx.lineWidth=3;
+ctx.lineCap="round";
+ctx.strokeStyle="#000";
+
+let drawing=false;
+
+function position(e){
+
+let rect=
+c.getBoundingClientRect();
+
+return{
+
+x:(e.clientX-rect.left)*
+c.width/rect.width,
+
+y:(e.clientY-rect.top)*
+c.height/rect.height
+
+};
+
+}
+
+c.addEventListener(
+"pointerdown",
+e=>{
+
+drawing=true;
+
+let p=position(e);
+
+ctx.beginPath();
+
+ctx.moveTo(
+p.x,
+p.y
+);
+
+}
+);
+
+c.addEventListener(
+"pointermove",
+e=>{
+
+if(!drawing)return;
+
+let p=position(e);
+
+ctx.lineTo(
+p.x,
+p.y
+);
+
+ctx.stroke();
+
+}
+);
+
+c.addEventListener(
+"pointerup",
+()=>drawing=false
+);
+
+c.addEventListener(
+"pointerleave",
+()=>drawing=false
+);
+
+}
+
+
+function clearSign(){
+
+let c=$("signCanvas");
+
+c.getContext("2d")
+.clearRect(
+0,
+0,
+c.width,
+c.height
+);
+
+}
+
+
+function prepareSignature(){
+
+let c=$("signCanvas");
+
+c.toBlob(blob=>{
+
+let url=
+URL.createObjectURL(blob);
+
+$("result").innerHTML=`
+
+<div class="result">
+
+<div class="result-title">
+✅ Signature Ready
+</div>
+
+<img
+class="preview"
+src="${url}">
+
+<button
+class="download"
+onclick="downloadBlob(
+window.signatureBlob,
+'signature.png'
+)">
+
+⬇️ Download Signature
+
+</button>
+
+</div>
+
+`;
+
+window.signatureBlob=blob;
+
+});
+
+}
+
+
+/* =========================
+   FILE HELPERS
+========================= */
+
+function fileData(file){
+
+return new Promise(resolve=>{
+
+let reader=
+new FileReader();
+
+reader.onload=
+()=>resolve(reader.result);
+
+reader.readAsDataURL(file);
+
+});
+
+}
+
+
+function loadImageURL(src){
+
+return new Promise(resolve=>{
+
+let img=new Image();
+
+img.onload=
+()=>resolve(img);
+
+img.src=src;
+
+});
+
+}
+
+
+function downloadBlob(blob,name){
+
+let url=
+URL.createObjectURL(blob);
+
+let a=
+document.createElement("a");
+
+a.href=url;
+a.download=name;
+
+document.body.appendChild(a);
+
+a.click();
+
+a.remove();
+
+setTimeout(
+()=>URL.revokeObjectURL(url),
+1000
+);
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function searchTools(){
+
+let query=
+$("search").value.toLowerCase();
+
+document.querySelectorAll(".card")
+.forEach(card=>{
+
+let name=
+card.dataset.name.toLowerCase();
+
+card.style.display=
+name.includes(query)
+?"block"
+:"none";
+
+});
+
+}
+
+</script>
+
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
+
+
+<h1>Raviranjan <span>Image &amp; PDF Tools</span></h1>
+<p>Resize • Compress • Convert • PDF • OCR • Edit</p></body></html>
